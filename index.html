@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <base target="_self">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doce Sabor - Pastelaria Artesanal</title>
+    <meta name="description" content="Pastelaria artesanal com os melhores doces, bolos e salgados. Tradição e qualidade em cada sabor.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'pastel-rosa': '#FFD1DC',
+                        'pastel-amarelo': '#FFF9C4',
+                        'pastel-verde': '#C8E6C9',
+                        'pastel-azul': '#B3E5FC',
+                        'pastel-laranja': '#FFCCBC',
+                        'pastel-roxo': '#E1BEE7',
+                        'marrom-claro': '#D7CCC8',
+                        'marrom-escuro': '#5D4037',
+                        'primary': '#E91E63',
+                        'secondary': '#FF9800'
+                    },
+                    fontFamily: {
+                        'poppins': ['Poppins', 'sans-serif'],
+                        'dancing': ['Dancing Script', 'cursive']
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s infinite'
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://picsum.photos/1600/900?random=1');
+            background-size: cover;
+            background-position: center;
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .flavor-tag {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="font-poppins bg-gray-50 text-gray-800">
+    <!-- Header e Navegação -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 rounded-full bg-pastel-rosa flex items-center justify-center">
+                        <i class="fas fa-birthday-cake text-primary text-xl"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-marrom-escuro font-dancing">Doce Sabor</h1>
+                </div>
+                
+                <!-- Menu Mobile -->
+                <button id="mobile-menu-btn" class="md:hidden text-marrom-escuro text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <!-- Navegação Desktop -->
+                <nav class="hidden md:block">
+                    <ul id="nav-list" class="flex space-x-8"></ul>
+                </nav>
+                
+                <!-- Carrinho e Contato -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <div class="relative">
+                        <button id="cart-btn" class="text-marrom-escuro hover:text-primary transition">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            <span id="cart-count" class="cart-badge bg-primary text-white hidden">0</span>
+                        </button>
+                    </div>
+                    <a href="#contato" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-pink-600 transition font-medium">Faça seu pedido</a>
+                </div>
+            </div>
+            
+            <!-- Menu Mobile Expandido -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4 pb-4 border-t pt-4">
+                <ul id="mobile-nav-list" class="space-y-3"></ul>
+                <div class="mt-4 flex items-center justify-between">
+                    <button id="mobile-cart-btn" class="text-marrom-escuro">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                        <span id="mobile-cart-count" class="cart-badge bg-primary text-white hidden">0</span>
+                    </button>
+                    <a href="#contato" class="bg-primary text-white px-6 py-2 rounded-full hover:bg-pink-600 transition font-medium text-sm">Faça seu pedido</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 font-dancing">Sabores que encantam</h2>
+            <p class="text-xl md:text-2xl mb-8 max-w-2xl mx-auto">Pastelaria artesanal com receitas tradicionais e ingredientes selecionados</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="#cardapio" class="bg-white text-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition">Ver Cardápio</a>
+                <a href="#contato" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary transition">Encomendar</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Destaques -->
+    <section class="py-12 bg-pastel-amarelo">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-marrom-escuro mb-10">Nossos Diferenciais</h2>
+            <div id="destaques-grid" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Cardápio -->
+    <section id="cardapio" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-marrom-escuro mb-4">Cardápio</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Deliciosas opções feitas com carinho e os melhores ingredientes</p>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="flex flex-wrap justify-center gap-4 mb-10">
+                <button class="filter-btn active px-5 py-2 rounded-full bg-primary text-white" data-filter="todos">Todos</button>
+                <button class="filter-btn px-5 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="doces">Doces</button>
+                <button class="filter-btn px-5 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="salgados">Salgados</button>
+                <button class="filter-btn px-5 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="bolos">Bolos</button>
+                <button class="filter-btn px-5 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300" data-filter="bebidas">Bebidas</button>
+            </div>
+            
+            <!-- Produtos -->
+            <div id="produtos-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+        </div>
+    </section>
+
+    <!-- Sobre -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <img src="https://picsum.photos/600/400?random=2" alt="Interior da pastelaria Doce Sabor" class="rounded-2xl shadow-lg w-full">
+                </div>
+                <div class="lg:w-1/2">
+                    <h2 class="text-3xl font-bold text-marrom-escuro mb-6">Nossa História</h2>
+                    <p class="text-gray-700 mb-4">Há mais de 20 anos, a Doce Sabor traz alegria e sabor à vida das pessoas através de suas receitas artesanais. Tudo começou com Dona Maria e suas receitas de família, passadas de geração em geração.</p>
+                    <p class="text-gray-700 mb-6">Hoje, mantemos a mesma tradição e cuidado com cada produto, usando apenas ingredientes frescos e de qualidade. Cada doce é feito com carinho, pensando em proporcionar momentos especiais.</p>
+                    <div class="flex items-center space-x-6">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary">20+</div>
+                            <div class="text-gray-600">Anos de tradição</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary">50+</div>
+                            <div class="text-gray-600">Produtos no cardápio</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-primary">1000+</div>
+                            <div class="text-gray-600">Clientes satisfeitos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeria -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center text-marrom-escuro mb-10">Nossas Delícias</h2>
+            <div id="galeria-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato" class="py-16 bg-pastel-verde">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-center text-marrom-escuro mb-10">Faça seu pedido</h2>
+                <div class="bg-white rounded-2xl shadow-lg p-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Informações -->
+                        <div>
+                            <h3 class="text-xl font-bold text-marrom-escuro mb-6">Informações de Contato</h3>
+                            <div class="space-y-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-full bg-pastel-rosa flex items-center justify-center">
+                                        <i class="fas fa-map-marker-alt text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Endereço</h4>
+                                        <p class="text-gray-600">Rua das Flores, 123<br>Centro, São Paulo - SP</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-full bg-pastel-amarelo flex items-center justify-center">
+                                        <i class="fas fa-phone-alt text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Telefone</h4>
+                                        <p class="text-gray-600">(11) 9999-9999<br>(11) 8888-8888</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 rounded-full bg-pastel-azul flex items-center justify-center">
+                                        <i class="fas fa-clock text-primary"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">Horário de Funcionamento</h4>
+                                        <p class="text-gray-600">Segunda a Sábado: 8h às 20h<br>Domingo: 9h às 18h</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Formulário -->
+                        <div>
+                            <h3 class="text-xl font-bold text-marrom-escuro mb-6">Envie seu pedido</h3>
+                            <form id="pedido-form" class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Nome completo</label>
+                                    <input type="text" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Telefone</label>
+                                    <input type="tel" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Pedido</label>
+                                    <textarea rows="4" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" placeholder="Descreva seu pedido aqui..." required></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 mb-2">Data para retirada</label>
+                                    <input type="date" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                </div>
+                                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition">Enviar Pedido</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-marrom-escuro text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-10 h-10 rounded-full bg-pastel-rosa flex items-center justify-center">
+                            <i class="fas fa-birthday-cake text-primary text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold font-dancing">Doce Sabor</h3>
+                    </div>
+                    <p class="text-gray-300">Tradição e qualidade em cada sabor desde 2003.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Links Rápidos</h4>
+                    <ul id="footer-links" class="space-y-2"></ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Cardápio</h4>
+                    <ul id="footer-menu" class="space-y-2"></ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Redes Sociais</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center hover:bg-primary transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                    <div class="mt-6">
+                        <p class="text-gray-300">Assine nossa newsletter</p>
+                        <div class="flex mt-2">
+                            <input type="email" placeholder="Seu e-mail" class="flex-grow px-4 py-2 rounded-l-lg text-gray-800">
+                            <button class="bg-primary px-4 py-2 rounded-r-lg hover:bg-pink-600 transition">Inscrever</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2023 Doce Sabor Pastelaria. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal do Carrinho -->
+    <div id="cart-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[80vh] overflow-hidden">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-marrom-escuro">Seu Carrinho</h3>
+                    <button id="close-cart" class="text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[50vh]">
+                <div id="cart-items" class="space-y-4">
+                    <!-- Itens do carrinho serão inseridos aqui -->
+                </div>
+                <div id="empty-cart" class="text-center py-8">
+                    <i class="fas fa-shopping-cart text-4xl text-gray-300 mb-4"></i>
+                    <p class="text-gray-500">Seu carrinho está vazio</p>
+                </div>
+            </div>
+            <div class="p-6 border-t">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="font-semibold">Total:</span>
+                    <span id="cart-total" class="text-xl font-bold text-primary">R$ 0,00</span>
+                </div>
+                <button id="checkout-btn" class="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-pink-600 transition">Finalizar Pedido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast de Notificação -->
+    <div id="toast" class="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-full transition-transform duration-300 z-50">
+        <div class="flex items-center space-x-3">
+            <i class="fas fa-check-circle"></i>
+            <span id="toast-message">Item adicionado ao carrinho!</span>
+        </div>
+    </div>
+
+    <script>
+        // ========== DATA LAYER ==========
+        const navigationItems = [
+            { "label": "Início", "href": "#inicio", "icon": "fas fa-home" },
+            { "label": "Cardápio", "href": "#cardapio", "icon": "fas fa-utensils" },
+            { "label": "Sobre", "href": "#sobre", "icon": "fas fa-info-circle" },
+            { "label": "Galeria", "href": "#galeria", "icon": "fas fa-images" },
+            { "label": "Contato", "href": "#contato", "icon": "fas fa-phone-alt" }
+        ];
+
+        const destaques = [
+            { 
+                "title": "Ingredientes Frescos", 
+                "description": "Utilizamos apenas ingredientes frescos e de qualidade em todas as nossas receitas.",
+                "icon": "fas fa-leaf",
+                "color": "pastel-verde"
+            },
+            { 
+                "title": "Receitas Tradicionais", 
+                "description": "Nossas receitas são passadas de geração em geração, mantendo o sabor original.",
+                "icon": "fas fa-book",
+                "color": "pastel-rosa"
+            },
+            { 
+                "title": "Atendimento Personalizado", 
+                "description": "Cada cliente é único e merece atenção especial para seu evento ou ocasião.",
+                "icon": "fas fa-heart",
+                "color": "pastel-azul"
+            }
+        ];
+
+        const produtos = [
+            { 
+                "id": 1, 
+                "nome": "Pastel de Belém", 
+                "descricao": "Pastel de nata tradicional português", 
+                "preco": 8.50, 
+                "categoria": "doces", 
+                "imagem": "https://picsum.photos/300/200?random=3",
+                "destaque": true
+            },
+            { 
+                "id": 2, 
+                "nome": "Pastel de Carne", 
+                "descricao": "Carne moída temperada com azeitonas", 
+                "preco": 7.00, 
+                "categoria": "salgados", 
+                "imagem": "https://picsum.photos/300/200?random=4",
+                "destaque": false
+            },
+            { 
+                "id": 3, 
+                "nome": "Bolo de Chocolate", 
+                "descricao": "Bolo com cobertura de ganache", 
+                "preco": 45.00, 
+                "categoria": "bolos", 
+                "imagem": "https://picsum.photos/300/200?random=5",
+                "destaque": true
+            },
+            { 
+                "id": 4, 
+                "nome": "Pastel de Queijo", 
+                "descricao": "Queijo mussarela derretido", 
+                "preco": 6.50, 
+                "categoria": "salgados", 
+                "imagem": "https://picsum.photos/300/200?random=6",
+                "destaque": false
+            },
+            { 
+                "id": 5, 
+                "nome": "Pastel de Frango", 
+                "descricao": "Frango desfiado com catupiry", 
+                "preco": 7.50, 
+                "categoria": "salgados", 
+                "imagem": "https://picsum.photos/300/200?random=7",
+                "destaque": false
+            },
+            { 
+                "id": 6, 
+                "nome": "Bolo de Cenoura", 
+                "descricao": "Com cobertura de chocolate", 
+                "preco": 40.00, 
+                "categoria": "bolos", 
+                "imagem": "https://picsum.photos/300/200?random=8",
+                "destaque": true
+            },
+            { 
+                "id": 7, 
+                "nome": "Pastel de Camarão", 
+                "descricao": "Camarão refogado com temperos", 
+                "preco": 9.00, 
+                "categoria": "salgados", 
+                "imagem": "https://picsum.photos/300/200?random=9",
+                "destaque": false
+            },
+            { 
+                "id": 8, 
+                "nome": "Suco Natural", 
+                "descricao": "Laranja, limão ou abacaxi", 
+                "preco": 6.00, 
+                "categoria": "bebidas", 
+                "imagem": "https://picsum.photos/300/200?random=10",
+                "destaque": false
+            },
+            { 
+                "id": 9, 
+                "nome": "Pastel de Romeu e Julieta", 
+                "descricao": "Queijo minas com goiabada", 
+                "preco": 8.00, 
+                "categoria": "doces", 
+                "imagem": "https://picsum.photos/300/200?random=11",
+                "destaque": true
+            },
+            { 
+                "id": 10, 
+                "nome": "Café Expresso", 
+                "descricao": "Café especial da casa", 
+                "preco": 4.00, 
+                "categoria": "bebidas", 
+                "imagem": "https://picsum.photos/300/200?random=12",
+                "destaque": false
+            },
+            { 
+                "id": 11, 
+                "nome": "Bolo de Fubá", 
+                "descricao": "Bolo de fubá com erva-doce", 
+                "preco": 35.00, 
+                "categoria": "bolos", 
+                "imagem": "https://picsum.photos/300/200?random=13",
+                "destaque": false
+            },
+            { 
+                "id": 12, 
+                "nome": "Pastel de Palmito", 
+                "descricao": "Palmito pupunha com queijo", 
+                "preco": 7.50, 
+                "categoria": "salgados", 
+                "imagem": "https://picsum.photos/300/200?random=14",
+                "destaque": false
+            }
+        ];
+
+        const galeriaItems = [
+            { "imagem": "https://picsum.photos/300/300?random=15", "alt": "Pastéis variados na vitrine" },
+            { "imagem": "https://picsum.photos/300/300?random=16", "alt": "Bolo decorado para festa" },
+            { "imagem": "https://picsum.photos/300/300?random=17", "alt": "Interior da pastelaria" },
+            { "imagem": "https://picsum.photos/300/300?random=18", "alt": "Processo de preparo dos pastéis" },
+            { "imagem": "https://picsum.photos/300/300?random=19", "alt": "Caixa de pastéis para viagem" },
+            { "imagem": "https://picsum.photos/300/300?random=20", "alt": "Equipe da pastelaria" },
+            { "imagem": "https://picsum.photos/300/300?random=21", "alt": "Doces variados" },
+            { "imagem": "https://picsum.photos/300/300?random=22", "alt": "Cliente feliz com pastel" }
+        ];
+
+        const footerLinks = [
+            { "label": "Início", "href": "#inicio" },
+            { "label": "Cardápio", "href": "#cardapio" },
+            { "label": "Sobre Nós", "href": "#sobre" },
+            { "label": "Contato", "href": "#contato" },
+            { "label": "Política de Privacidade", "href": "#privacidade" },
+            { "label": "Termos de Uso", "href": "#termos" }
+        ];
+
+        const footerMenu = [
+            { "label": "Pastéis Doces", "href": "#doces" },
+            { "label": "Pastéis Salgados", "href": "#salgados" },
+            { "label": "Bolos", "href": "#bolos" },
+            { "label": "Bebidas", "href": "#bebidas" },
+            { "label": "Promoções", "href": "#promocoes" }
+        ];
+
+        // Carrinho de compras
+        let carrinho = JSON.parse(localStorage.getItem('carrinho_pastelaria')) || [];
+
+        // ========== REUSABLE RENDER FUNCTIONS ==========
+        function renderNavItems(items) {
+            return items.map(item => 
+                `<li><a href="${item.href}" class="text-gray-700 hover:text-primary transition font-medium">${item.label}</a></li>`
+            ).join("");
+        }
+
+        function renderMobileNavItems(items) {
+            return items.map(item => 
+                `<li><a href="${item.href}" class="flex items-center space-x-3 py-2 text-gray-700 hover:text-primary transition"><i class="${item.icon} w-5"></i><span>${item.label}</span></a></li>`
+            ).join("");
+        }
+
+        function renderDestaques(items) {
+            return items.map(item => 
+                `<div class="bg-white rounded-2xl p-6 text-center card-hover">
+                    <div class="w-16 h-16 rounded-full bg-${item.color} flex items-center justify-center mx-auto mb-4">
+                        <i class="${item.icon} text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-marrom-escuro mb-3">${item.title}</h3>
+                    <p class="text-gray-600">${item.description}</p>
+                </div>`
+            ).join("");
+        }
+
+        function renderProdutos(items) {
+            return items.map(item => {
+                const precoFormatado = item.preco.toFixed(2).replace('.', ',');
+                const destaqueBadge = item.destaque ? 
+                    `<span class="flavor-tag bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">Destaque</span>` : '';
+                
+                return `
+                <div class="produto-item bg-white rounded-xl overflow-hidden shadow-md card-hover" data-categoria="${item.categoria}">
+                    <div class="relative">
+                        <img src="${item.imagem}" alt="${item.nome}" class="w-full h-48 object-cover" loading="lazy">
+                        ${destaqueBadge}
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-lg font-bold text-marrom-escuro">${item.nome}</h3>
+                            <span class="text-primary font-bold">R$ ${precoFormatado}</span>
+                        </div>
+                        <p class="text-gray-600 text-sm mb-4">${item.descricao}</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-3 py-1 rounded-full bg-gray-100 text-gray-700">${item.categoria}</span>
+                            <button class="add-to-cart-btn bg-primary text-white px-4 py-2 rounded-lg hover:bg-pink-600 transition font-medium text-sm" data-id="${item.id}" data-nome="${item.nome}" data-preco="${item.preco}">
+                                <i class="fas fa-cart-plus mr-2"></i>Adicionar
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join("");
+        }
+
+        function renderGaleria(items) {
+            return items.map(item => 
+                `<div class="overflow-hidden rounded-lg">
+                    <img src="${item.imagem}" alt="${item.alt}" class="w-full h-64 object-cover hover:scale-110 transition duration-300" loading="lazy">
+                </div>`
+            ).join("");
+        }
+
+        function renderFooterLinks(items) {
+            return items.map(item => 
+                `<li><a href="${item.href}" class="text-gray-300 hover:text-white transition">${item.label}</a></li>`
+            ).join("");
+        }
+
+        function renderFooterMenu(items) {
+            return items.map(item => 
+                `<li><a href="${item.href}" class="text-gray-300 hover:text-white transition">${item.label}</a></li>`
+            ).join("");
+        }
+
+        function renderCartItems(items) {
+            if (items.length === 0) {
+                document.getElementById('empty-cart').classList.remove('hidden');
+                return '';
+            }
+            
+            document.getElementById('empty-cart').classList.add('hidden');
+            return items.map(item => {
+                const precoFormatado = item.preco.toFixed(2).replace('.', ',');
+                const subtotal = (item.preco * item.quantidade).toFixed(2).replace('.', ',');
+                
+                return `
+                <div class="flex items-center justify-between border-b pb-4" data-id="${item.id}">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-lg overflow-hidden">
+                            <img src="${item.imagem}" alt="${item.nome}" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800">${item.nome}</h4>
+                            <p class="text-sm text-gray-600">R$ ${precoFormatado} cada</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="flex items-center space-x-2">
+                            <button class="decrease-qty w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center" data-id="${item.id}">-</button>
+                            <span class="font-medium">${item.quantidade}</span>
+                            <button class="increase-qty w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center" data-id="${item.id}">+</button>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold text-primary">R$ ${subtotal}</div>
+                            <button class="remove-item text-red-500 text-sm hover:text-red-700" data-id="${item.id}">Remover</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join("");
+        }
+
+        // ========== UTILITY FUNCTIONS ==========
+        function formatCurrency(value) {
+            return 'R$ ' + value.toFixed(2).replace('.', ',');
+        }
+
+        function updateCartCount() {
+            const totalItems = carrinho.reduce((total, item) => total + item.quantidade, 0);
+            const cartCount = document.getElementById('cart-count');
+            const mobileCartCount = document.getElementById('mobile-cart-count');
+            
+            if (totalItems > 0) {
+                cartCount.textContent = totalItems;
+                cartCount.classList.remove('hidden');
+                mobileCartCount.textContent = totalItems;
+                mobileCartCount.classList.remove('hidden');
+            } else {
+                cartCount.classList.add('hidden');
+                mobileCartCount.classList.add('hidden');
+            }
+        }
+
+        function updateCartTotal() {
+            const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+            document.getElementById('cart-total').textContent = formatCurrency(total);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.classList.remove('translate-y-full');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-full');
+            }, 3000);
+        }
+
+        function addToCart(productId, productName, productPrice, productImage) {
+            const existingItem = carrinho.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantidade += 1;
+            } else {
+                carrinho.push({
+                    id: productId,
+                    nome: productName,
+                    preco: productPrice,
+                    imagem: productImage,
+                    quantidade: 1
+                });
+            }
+            
+            localStorage.setItem('carrinho_pastelaria', JSON.stringify(carrinho));
+            updateCartCount();
+            showToast(`${productName} adicionado ao carrinho!`);
+        }
+
+        function removeFromCart(productId) {
+            carrinho = carrinho.filter(item => item.id !== productId);
+            localStorage.setItem('carrinho_pastelaria', JSON.stringify(carrinho));
+            updateCartCount();
+            updateCartTotal();
+            renderCart();
+        }
+
+        function updateQuantity(productId, change) {
+            const item = carrinho.find(item => item.id === productId);
+            
+            if (item) {
+                item.quantidade += change;
+                
+                if (item.quantidade <= 0) {
+                    removeFromCart(productId);
+                } else {
+                    localStorage.setItem('carrinho_pastelaria', JSON.stringify(carrinho));
+                    updateCartCount();
+                    updateCartTotal();
+                    renderCart();
+                }
+            }
+        }
+
+        function renderCart() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            cartItemsContainer.innerHTML = renderCartItems(carrinho);
+            updateCartTotal();
+            
+            // Re-attach event listeners
+            document.querySelectorAll('.decrease-qty').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    updateQuantity(productId, -1);
+                });
+            });
+            
+            document.querySelectorAll('.increase-qty').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    updateQuantity(productId, 1);
+                });
+            });
+            
+            document.querySelectorAll('.remove-item').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    removeFromCart(productId);
+                });
+            });
+        }
+
+        function filterProdutos(categoria) {
+            const produtosContainer = document.getElementById('produtos-grid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            // Update active button
+            filterBtns.forEach(btn => {
+                if (btn.getAttribute('data-filter') === categoria) {
+                    btn.classList.remove('bg-gray-200', 'text-gray-700');
+                    btn.classList.add('bg-primary', 'text-white');
+                } else {
+                    btn.classList.remove('bg-primary', 'text-white');
+                    btn.classList.add('bg-gray-200', 'text-gray-700');
+                }
+            });
+            
+            // Filter products
+            let filteredProdutos;
+            if (categoria === 'todos') {
+                filteredProdutos = produtos;
+            } else {
+                filteredProdutos = produtos.filter(produto => produto.categoria === categoria);
+            }
+            
+            produtosContainer.innerHTML = renderProdutos(filteredProdutos);
+            
+            // Re-attach event listeners to new buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const nome = this.getAttribute('data-nome');
+                    const preco = parseFloat(this.getAttribute('data-preco'));
+                    const imagem = produtos.find(p => p.id === id).imagem;
+                    
+                    addToCart(id, nome, preco, imagem);
+                });
+            });
+        }
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render all sections
+            document.getElementById('nav-list').innerHTML = renderNavItems(navigationItems);
+            document.getElementById('mobile-nav-list').innerHTML = renderMobileNavItems(navigationItems);
+            document.getElementById('destaques-grid').innerHTML = renderDestaques(destaques);
+            document.getElementById('produtos-grid').innerHTML = renderProdutos(produtos);
+            document.getElementById('galeria-grid').innerHTML = renderGaleria(galeriaItems);
+            document.getElementById('footer-links').innerHTML = renderFooterLinks(footerLinks);
+            document.getElementById('footer-menu').innerHTML = renderFooterMenu(footerMenu);
+            
+            // Initialize cart
+            updateCartCount();
+            
+            // Event listeners for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Close mobile menu if open
+                        document.getElementById('mobile-menu').classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Mobile menu toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const categoria = this.getAttribute('data-filter');
+                    filterProdutos(categoria);
+                });
+            });
+            
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const nome = this.getAttribute('data-nome');
+                    const preco = parseFloat(this.getAttribute('data-preco'));
+                    const imagem = produtos.find(p => p.id === id).imagem;
+                    
+                    addToCart(id, nome, preco, imagem);
+                });
+            });
+            
+            // Cart modal
+            const cartModal = document.getElementById('cart-modal');
+            const cartBtn = document.getElementById('cart-btn');
+            const mobileCartBtn = document.getElementById('mobile-cart-btn');
+            const closeCartBtn = document.getElementById('close-cart');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            
+            function openCartModal() {
+                renderCart();
+                cartModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeCartModal() {
+                cartModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+            
+            cartBtn.addEventListener('click', openCartModal);
+            mobileCartBtn.addEventListener('click', openCartModal);
+            closeCartBtn.addEventListener('click', closeCartModal);
+            
+            cartModal.addEventListener('click', function(e) {
+                if (e.target === cartModal) {
+                    closeCartModal();
+                }
+            });
+            
+            checkoutBtn.addEventListener('click', function() {
+                if (carrinho.length === 0) {
+                    alert('Seu carrinho está vazio!');
+                    return;
+                }
+                
+                alert('Pedido finalizado com sucesso! Em breve entraremos em contato para confirmar os detalhes.');
+                carrinho = [];
+                localStorage.setItem('carrinho_pastelaria', JSON.stringify(carrinho));
+                updateCartCount();
+                renderCart();
+                closeCartModal();
+            });
+            
+            // Form submission
+            document.getElementById('pedido-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Basic validation
+                const nome = this.querySelector('input[type="text"]').value;
+                const telefone = this.querySelector('input[type="tel"]').value;
+                const pedido = this.querySelector('textarea').value;
+                const data = this.querySelector('input[type="date"]').value;
+                
+                if (!nome || !telefone || !pedido || !data) {
+                    alert('Por favor, preencha todos os campos obrigatórios.');
+                    return;
+                }
+                
+                // Simulate form submission
+                alert(`Pedido enviado com sucesso!\n\nNome: ${nome}\nTelefone: ${telefone}\nData de retirada: ${data}\n\nEm breve entraremos em contato para confirmar.`);
+                
+                // Reset form
+                this.reset();
+            });
+            
+            // Newsletter subscription
+            const newsletterBtn = document.querySelector('footer button');
+            const newsletterInput = document.querySelector('footer input[type="email"]');
+            
+            if (newsletterBtn && newsletterInput) {
+                newsletterBtn.addEventListener('click', function() {
+                    const email = newsletterInput.value;
+                    
+                    if (!email || !email.includes('@')) {
+                        alert('Por favor, insira um e-mail válido.');
+                        return;
+                    }
+                    
+                    alert(`Obrigado por se inscrever! Você receberá nossas novidades em ${email}`);
+                    newsletterInput.value = '';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
